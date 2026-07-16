@@ -1,0 +1,203 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CoffinTranslate.ViewModels"
+             xmlns:loc="using:CoffinTranslate.Services"
+             x:Class="CoffinTranslate.Views.InstallView"
+             x:DataType="vm:InstallViewModel"
+             DragDrop.AllowDrop="True">
+
+    <ScrollViewer>
+        <StackPanel Margin="36,28" Spacing="14" MaxWidth="760">
+            <TextBlock Classes="h1" Text="{loc:Localize Install_Title}" />
+            <TextBlock Classes="subtitle" Text="{loc:Localize Install_Subtitle}" />
+
+            <!-- game status -->
+            <Border Classes="card" Margin="0,8,0,0">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <Panel Grid.Column="0" Margin="2,0,12,0" VerticalAlignment="Center">
+                        <Ellipse Width="10" Height="10" Fill="#3FB950" IsVisible="{Binding GameFound}" />
+                        <Ellipse Width="10" Height="10" Fill="#C08A00" IsVisible="{Binding !GameFound}" />
+                    </Panel>
+                    <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding GameStatusTitle}" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding GameStatusDetail}" Opacity="0.6" FontSize="12"
+                                   TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8"
+                                VerticalAlignment="Center" Margin="12,0,0,0">
+                        <Button Classes="accent" Content="{loc:Localize Install_LaunchGame}"
+                                Command="{Binding LaunchGameCommand}" IsVisible="{Binding CanLaunchGame}" />
+                        <Button Content="{loc:Localize Install_ChangeGameFolder}"
+                                Command="{Binding BrowseGameFolderCommand}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+            <TextBlock Classes="error" Text="{Binding GameError}" IsVisible="{Binding HasGameError}" />
+
+            <!-- Community | Manuell toggle -->
+            <StackPanel Orientation="Horizontal" Spacing="6" Margin="0,6,0,0">
+                <Button Classes="seg" Classes.active="{Binding CommunityMode}"
+                        Content="{loc:Localize Community_Tab}" Command="{Binding ShowCommunityCommand}" />
+                <Button Classes="seg" Classes.active="{Binding ManualMode}"
+                        Content="{loc:Localize Manual_Tab}" Command="{Binding ShowManualCommand}" />
+            </StackPanel>
+
+            <!-- ==================== COMMUNITY ==================== -->
+            <StackPanel Spacing="12" IsVisible="{Binding CommunityMode}">
+                <TextBlock Classes="subtitle" Text="{loc:Localize Community_Intro}" />
+
+                <StackPanel Orientation="Horizontal" Spacing="12" IsVisible="{Binding IsCatalogLoading}">
+                    <ProgressBar IsIndeterminate="True" Width="150" VerticalAlignment="Center" />
+                    <TextBlock Text="{loc:Localize Community_Loading}" Opacity="0.7" VerticalAlignment="Center" />
+                </StackPanel>
+
+                <Border Classes="card" IsVisible="{Binding HasCatalogError}">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="warning" Text="{Binding CatalogError}" />
+                        <Button Classes="accent" HorizontalAlignment="Left"
+                                Content="{loc:Localize Community_Retry}" Command="{Binding LoadCatalogCommand}" />
+                    </StackPanel>
+                </Border>
+
+                <TextBlock Opacity="0.6" TextWrapping="Wrap"
+                           Text="{loc:Localize Community_Empty}" IsVisible="{Binding ShowCommunityEmpty}" />
+
+                <ItemsControl ItemsSource="{Binding CommunityPacks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:CommunityPackViewModel">
+                            <Border Classes="card" Margin="0,0,0,10">
+                                <StackPanel Spacing="8">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <StackPanel Grid.Column="0" Spacing="3">
+                                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                                <TextBlock Text="{Binding Language}" FontSize="18" FontWeight="SemiBold"
+                                                           VerticalAlignment="Center" />
+                                                <Border Background="#3FB950" CornerRadius="6" Padding="7,2" VerticalAlignment="Center"
+                                                        IsVisible="{Binding IsInstalled}">
+                                                    <TextBlock Text="{loc:Localize Community_Installed}" Foreground="White"
+                                                               FontSize="11" FontWeight="SemiBold" />
+                                                </Border>
+                                                <Border Background="#3B82F6" CornerRadius="6" Padding="7,2" VerticalAlignment="Center"
+                                                        IsVisible="{Binding HasUpdate}">
+                                                    <TextBlock Text="{loc:Localize Community_UpdateBadge}" Foreground="White"
+                                                               FontSize="11" FontWeight="SemiBold" />
+                                                </Border>
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding Subtitle}" Opacity="0.6" FontSize="12" />
+                                        </StackPanel>
+                                        <Button Grid.Column="1" Classes="accent" VerticalAlignment="Center" Padding="18,8"
+                                                Content="{Binding ActionText}" Command="{Binding InstallCommand}"
+                                                IsEnabled="{Binding !IsBusy}" />
+                                    </Grid>
+
+                                    <TextBlock Text="{Binding Description}" Opacity="0.8" TextWrapping="Wrap"
+                                               IsVisible="{Binding HasDescription}" />
+
+                                    <StackPanel Orientation="Horizontal" Spacing="12">
+                                        <TextBlock Text="{Binding GameVersionText}" Opacity="0.5" FontSize="12"
+                                                   VerticalAlignment="Center" IsVisible="{Binding ShowGameVersion}" />
+                                        <Button Classes="seg" Padding="9,3" VerticalAlignment="Center"
+                                                Content="{loc:Localize Community_Source}" Command="{Binding OpenSourceCommand}"
+                                                IsVisible="{Binding HasSource}" />
+                                    </StackPanel>
+
+                                    <TextBlock Classes="warning" FontSize="12" TextWrapping="Wrap"
+                                               Text="{Binding MismatchText}" IsVisible="{Binding ShowMismatch}" />
+
+                                    <ProgressBar Minimum="0" Maximum="1" Value="{Binding Progress}" Height="6"
+                                                 IsVisible="{Binding IsBusy}" />
+
+                                    <TextBlock FontSize="12" Foreground="#3FB950" TextWrapping="Wrap"
+                                               Text="{Binding StatusMessage}" IsVisible="{Binding ShowSuccessStatus}" />
+                                    <TextBlock Classes="error" FontSize="12"
+                                               Text="{Binding StatusMessage}" IsVisible="{Binding ShowErrorStatus}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!-- ==================== MANUELL ==================== -->
+            <StackPanel Spacing="14" IsVisible="{Binding ManualMode}">
+                <!-- drop zone -->
+                <Border x:Name="DropZone" Classes="dropzone" MinHeight="220" Margin="0,8,0,0"
+                        IsVisible="{Binding ShowDropZone}">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="6" Margin="24">
+                        <TextBlock Text="{loc:Localize Install_DropHint}" FontSize="18" FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                        <TextBlock Text="{loc:Localize Install_DropHint2}" Opacity="0.6"
+                                   HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+                        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" Margin="0,14,0,0">
+                            <Button Content="{loc:Localize Install_BrowseFile}"
+                                    Command="{Binding BrowsePackageFileCommand}" />
+                            <Button Content="{loc:Localize Install_BrowseFolder}"
+                                    Command="{Binding BrowsePackageFolderCommand}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <ProgressBar IsIndeterminate="True" IsVisible="{Binding IsBusy}" />
+
+                <TextBlock Classes="error" Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" />
+
+                <!-- loaded package -->
+                <Border Classes="card" Margin="0,8,0,0" IsVisible="{Binding ShowPackage}">
+                    <StackPanel Spacing="12">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <StackPanel Grid.Column="0" Spacing="2">
+                                <TextBlock Text="{Binding PackageTitle}" FontSize="20" FontWeight="SemiBold" />
+                                <TextBlock Text="{Binding PackageCredits}" Opacity="0.7"
+                                           IsVisible="{Binding HasPackageCredits}" />
+                            </StackPanel>
+                            <Button Grid.Column="1" VerticalAlignment="Top"
+                                    Content="{loc:Localize Install_ClearPackage}"
+                                    Command="{Binding ClearPackageCommand}" />
+                        </Grid>
+
+                        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Opacity="0.6" Margin="0,0,16,4"
+                                       Text="{loc:Localize Install_Package_Contents}" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" TextWrapping="Wrap"
+                                       Text="{Binding PackageContents}" />
+                            <TextBlock Grid.Row="1" Grid.Column="0" Opacity="0.6" Margin="0,0,16,0"
+                                       Text="{loc:Localize Install_Package_Source}" />
+                            <TextBlock Grid.Row="1" Grid.Column="1" TextTrimming="CharacterEllipsis"
+                                       Text="{Binding PackageSource}" />
+                        </Grid>
+
+                        <TextBlock Classes="warning" Text="{Binding PackageWarnings}"
+                                   IsVisible="{Binding HasPackageWarnings}" />
+                        <TextBlock Classes="warning" Text="{Binding ReplaceWarning}"
+                                   IsVisible="{Binding HasReplaceWarning}" />
+
+                        <Button Classes="accent" Padding="24,10" FontSize="15" HorizontalAlignment="Left"
+                                Content="{loc:Localize Install_Button}"
+                                Command="{Binding InstallCommand}"
+                                IsEnabled="{Binding CanInstall}" />
+                    </StackPanel>
+                </Border>
+
+                <!-- success -->
+                <Border Classes="card" Margin="0,8,0,0" IsVisible="{Binding InstallSucceeded}">
+                    <StackPanel Spacing="8" Margin="0,24">
+                        <TextBlock Text="✓" FontSize="44" Foreground="#3FB950" HorizontalAlignment="Center" />
+                        <TextBlock Text="{loc:Localize Install_Success_Title}" FontSize="20" FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" TextAlignment="Center" />
+                        <TextBlock Text="{loc:Localize Install_Success_Text}" Opacity="0.75" TextWrapping="Wrap"
+                                   TextAlignment="Center" MaxWidth="440" HorizontalAlignment="Center" />
+                        <TextBlock Text="{Binding SuccessDetail}" Opacity="0.6" FontSize="12"
+                                   HorizontalAlignment="Center" TextAlignment="Center"
+                                   IsVisible="{Binding HasSuccessDetail}" />
+                        <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center" Margin="0,12,0,0">
+                            <Button Content="{loc:Localize Install_OpenLanguagesFolder}"
+                                    Command="{Binding OpenLanguagesFolderCommand}" />
+                            <Button Classes="accent" Content="{loc:Localize Install_InstallAnother}"
+                                    Command="{Binding InstallAnotherCommand}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>
