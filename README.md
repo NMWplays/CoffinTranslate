@@ -70,7 +70,7 @@ Note: RAR and 7z archives must be extracted first. ZIP files work directly.
 
 CoffinTranslate installs any translation package that follows the game's official layout: a folder
 (or ZIP) containing a `dialogue.txt` or `dialogue.csv`, optionally with a `font/` folder and
-translated image folders (`pictures/`, `system/`, `titles1/`), or a single compiled `.cld` file.
+translated image folders (`pictures/`, `system/`, `titles1/`).
 
 To translate from scratch, use the built-in **editor**. It reads the game's full translatable
 source locally and shows the English original next to each line, so you never have to edit a
