@@ -111,9 +111,9 @@ translate the values, and register the language code in `Services/Localizer.cs`.
 The game ships its full translatable source (every line of dialogue, item names and descriptions,
 menus, speaker names) inside `www/languages/tool/Translator.dat`. CoffinTranslate reads that file
 locally for reference so you can translate from scratch with the English source shown next to each
-line. The format is documented in
-[`docs/official-tool-analysis.md`](docs/official-tool-analysis.md) §3.5. No game content is
-redistributed: the file stays in your own installation.
+line.
+
+§3.5. No game content is redistributed: the file stays in your own installation.
 
 ## Safety
 
