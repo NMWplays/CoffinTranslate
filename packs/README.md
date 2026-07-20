@@ -28,7 +28,7 @@ listed pack with one click.
      "id": "deutsch-marie",
      "language": "Deutsch",
      "authors": "Marie",
-     "version": "1.3",
+     "version": "1.0",
      "gameVersion": "3.0.13",
      "description": "Vollständige deutsche Übersetzung.",
      "source": "https://steamcommunity.com/app/.../discussions/...",
