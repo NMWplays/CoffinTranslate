@@ -76,9 +76,6 @@ To translate from scratch, use the built-in **editor**. It reads the game's full
 source locally and shows the English original next to each line, so you never have to edit a
 spreadsheet by hand. See [How the editor gets the source text](#how-the-editor-gets-the-source-text).
 
-The game's translation file formats are documented in
-[`docs/official-tool-analysis.md`](docs/official-tool-analysis.md).
-
 ## Building from source
 
 Requirements: [.NET 10 SDK](https://dotnet.microsoft.com/download)
