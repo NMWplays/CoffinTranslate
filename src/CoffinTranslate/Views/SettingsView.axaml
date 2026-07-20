@@ -1,0 +1,125 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CoffinTranslate.ViewModels"
+             xmlns:svc="using:CoffinTranslate.Services"
+             xmlns:loc="using:CoffinTranslate.Services"
+             x:Class="CoffinTranslate.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <ScrollViewer>
+        <StackPanel Margin="36,28" Spacing="10" MaxWidth="760">
+            <TextBlock Classes="h1" Text="{loc:Localize Settings_Title}" />
+
+            <TextBlock Classes="section" Text="{loc:Localize Settings_UiLanguage}" />
+            <Panel HorizontalAlignment="Left">
+                <Button x:Name="LangButton" Classes="dropdown" MinWidth="260"
+                        Command="{Binding ToggleLanguageCommand}">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Text="{Binding SelectedLanguage.DisplayName}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="▾" Margin="12,0,0,0" Opacity="0.6"
+                                   VerticalAlignment="Center" IsVisible="{Binding !IsLanguageOpen}" />
+                        <TextBlock Grid.Column="1" Text="▴" Margin="12,0,0,0" Opacity="0.6"
+                                   VerticalAlignment="Center" IsVisible="{Binding IsLanguageOpen}" />
+                    </Grid>
+                </Button>
+                <Popup PlacementTarget="{Binding #LangButton}" Placement="BottomEdgeAlignedLeft"
+                       IsOpen="{Binding IsLanguageOpen, Mode=TwoWay}"
+                       IsLightDismissEnabled="True" VerticalOffset="6">
+                    <Border Classes="dropdown-popup" MinWidth="{Binding #LangButton.Bounds.Width}">
+                        <ItemsControl ItemsSource="{Binding Languages}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="svc:UiLanguage">
+                                    <Button Classes="dropdown-item"
+                                            Command="{Binding $parent[ItemsControl].((vm:SettingsViewModel)DataContext).SelectLanguageCommand}"
+                                            CommandParameter="{Binding}">
+                                        <Grid ColumnDefinitions="*,Auto">
+                                            <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" />
+                                            <TextBlock Grid.Column="1" Text="✓" Foreground="#5B9BF6" FontWeight="Bold"
+                                                       Margin="12,0,0,0" VerticalAlignment="Center">
+                                                <TextBlock.IsVisible>
+                                                    <MultiBinding Converter="{x:Static svc:RefEqualsConverter.Instance}">
+                                                        <Binding />
+                                                        <Binding Path="$parent[ItemsControl].((vm:SettingsViewModel)DataContext).SelectedLanguage" />
+                                                    </MultiBinding>
+                                                </TextBlock.IsVisible>
+                                            </TextBlock>
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Border>
+                </Popup>
+            </Panel>
+
+            <TextBlock Classes="section" Text="{loc:Localize Settings_Theme}" />
+            <Border Classes="card" HorizontalAlignment="Left" Padding="10">
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Classes="seg" Classes.active="{Binding IsThemeSystem}"
+                            Content="{loc:Localize Settings_Theme_System}"
+                            Command="{Binding SetThemeCommand}" CommandParameter="system" />
+                    <Button Classes="seg" Classes.active="{Binding IsThemeLight}"
+                            Content="{loc:Localize Settings_Theme_Light}"
+                            Command="{Binding SetThemeCommand}" CommandParameter="light" />
+                    <Button Classes="seg" Classes.active="{Binding IsThemeDark}"
+                            Content="{loc:Localize Settings_Theme_Dark}"
+                            Command="{Binding SetThemeCommand}" CommandParameter="dark" />
+                </StackPanel>
+            </Border>
+
+            <TextBlock Classes="section" Text="{loc:Localize Settings_Editor}" />
+            <Border Classes="card">
+                <StackPanel Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto" VerticalAlignment="Center">
+                        <StackPanel Grid.Column="0" Spacing="1" VerticalAlignment="Center">
+                            <TextBlock Text="{loc:Localize Settings_Autosave}" />
+                            <TextBlock Text="{loc:Localize Settings_Autosave_Unit}" Opacity="0.5" FontSize="12" />
+                        </StackPanel>
+                        <NumericUpDown Grid.Column="1" Width="130" Minimum="1" Maximum="600" Increment="1"
+                                       FormatString="0" CornerRadius="8" Value="{Binding AutosaveSeconds}" />
+                    </Grid>
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="{loc:Localize Settings_DefaultFont}" />
+                        <TextBlock Text="{loc:Localize Settings_DefaultFont_Hint}" Opacity="0.5" FontSize="12" TextWrapping="Wrap" />
+                        <TextBox CornerRadius="8" MaxWidth="320" HorizontalAlignment="Left"
+                                 Text="{Binding DefaultFontFace}"
+                                 PlaceholderText="GameFont" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Classes="section" Text="{loc:Localize Settings_GamePath}" />
+            <Border Classes="card">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0"
+                               TextTrimming="CharacterEllipsis"
+                               Text="{Binding GamePathText}" />
+                    <Button Grid.Column="1"
+                            Content="{loc:Localize Settings_Change}"
+                            Command="{Binding ChangeGamePathCommand}" />
+                </Grid>
+            </Border>
+            <TextBlock Classes="error" Text="{Binding GameError}" IsVisible="{Binding HasGameError}" />
+
+            <TextBlock Classes="section" Text="{loc:Localize Settings_Backups}" />
+            <Border Classes="card">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="{loc:Localize Settings_BackupHint}" Opacity="0.7" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding BackupPathText}" Opacity="0.5" FontSize="12"
+                               TextTrimming="CharacterEllipsis" />
+                    <Button HorizontalAlignment="Left"
+                            Content="{loc:Localize Settings_OpenBackups}"
+                            Command="{Binding OpenBackupFolderCommand}" />
+                </StackPanel>
+            </Border>
+
+            <TextBlock Classes="section" Text="{loc:Localize Settings_About}" />
+            <Border Classes="card">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="{loc:Localize Settings_About_Text}" TextWrapping="Wrap" Opacity="0.8" />
+                    <TextBlock Text="{Binding VersionText}" Opacity="0.5" FontSize="12" />
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

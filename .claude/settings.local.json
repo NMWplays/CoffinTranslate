@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell(Get-Content *)",
+      "PowerShell(dotnet new *)",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(dotnet build *)",
+      "PowerShell(dotnet test *)",
+      "mcp__avalonia-docs__get_avalonia_expert_rules",
+      "mcp__avalonia-docs__search_avalonia_docs",
+      "mcp__avalonia-docs__lookup_avalonia_api"
+    ]
+  }
+}

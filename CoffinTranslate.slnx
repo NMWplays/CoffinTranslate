@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CoffinTranslate.Core/CoffinTranslate.Core.csproj" />
+    <Project Path="src/CoffinTranslate/CoffinTranslate.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CoffinTranslate.Core.Tests/CoffinTranslate.Core.Tests.csproj" />
+  </Folder>
+</Solution>
