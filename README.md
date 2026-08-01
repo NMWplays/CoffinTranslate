@@ -134,3 +134,11 @@ Archives are validated against path-traversal attacks before extraction.
 CoffinTranslate is an unofficial fan project. It is not affiliated with, endorsed by, or supported
 by Kit9 Studio. It does not contain or distribute any game content. You need to own the game, and
 translations are made and shared by their respective authors.
+
+## Credits
+
+Created by NMW.
+
+## License
+
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See the LICENSE file for details.
